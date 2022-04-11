@@ -12,6 +12,10 @@
                 <div class="card-header">
                     Venta directa
                     <div class="btn-actions-pane-right">
+                        <button class="btn btn-success mr-1"
+                            @click="loadingData = true; getProductsCategoriesClientsAndPaymentMethods(); clearOrder()">
+                            <i class="fa fa-plus"></i> Nueva venta
+                        </button>
                         <button class="btn btn-primary"
                             @click="showModalToPay">
                             <i class="fa fa-cash-register"></i> Pagar
@@ -255,6 +259,16 @@
                 })
 
                 return total
+            },
+            clearOrder () {
+                this.order = {
+                    client: '',
+                    client_id: '',
+                    valueWithPay: '',
+                    orderDetails: [],
+                    payment_method_id: '',
+                    printBill: true
+                }
             },
         },
         computed: {

@@ -50,10 +50,10 @@
                                             <td>{{ delivery.status }}</td>
                                             <td>{{ delivery.user_create.names }}</td>
                                             <td>{{ delivery.user_cancel ? delivery.user_cancel.names : '' }}</td>
-                                            <td>${{ $formatNum(getTotal(delivery.order_details, delivery) - delivery.value_delivery) }}</td>
+                                            <td>${{ $formatNum(delivery.total_order - delivery.value_delivery) }}</td>
                                             <td>${{ $formatNum(delivery.value_delivery) }}</td>
                                             <td>
-                                                ${{ $formatNum(getTotal(delivery.order_details, delivery)) }}
+                                                ${{ $formatNum(delivery.total_order) }}
                                             </td>
                                         </tr>
                                     </tbody>

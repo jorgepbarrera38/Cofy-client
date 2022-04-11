@@ -189,9 +189,9 @@
                         </p>
                         <p>
                             Desarrollado por 
-                            <a href="https://www.facebook.com/digitalprog" target="_blank">Digital Pro</a> <br>
-                            Teléfono: <a href="tel:3214436063" target="_blank">321 443 6063</a> <br>
-                            WhatsApp: <a href="https://api.whatsapp.com/send?phone=573214436063" target="_blank">321 443 6063</a>
+                            <a href="https://web.facebook.com/digitalappsoftware" target="_blank">DigitalApp</a> <br>
+                            Teléfono: <a href="tel:3203719962" target="_blank">320 371 9962</a> <br>
+                            WhatsApp: <a href="https://api.whatsapp.com/send?phone=573203719962" target="_blank">320 371 9962</a>
                         </p>
                         <hr>
                         <button class="btn btn-secondary mr-1" @click="$modal.hide('about-modal')">

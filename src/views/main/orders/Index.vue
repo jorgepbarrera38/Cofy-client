@@ -29,7 +29,7 @@
                                         <div class="widget-subheading" :style="{ opacity: table.orders.length ? .7 : 0 }">Consecutivo: {{ table.orders.length ? table.orders[0].id : '' }}</div>
                                     </div>
                                     <div class="widget-content-right">
-                                        <div class="widget-numbers text-success">{{ table.orders.length ? `$${ $formatNum(getTotal(table.orders[0].order_details)) }` : '$0' }}</div>
+                                        <div class="widget-numbers text-success">{{ table.orders.length ? `$${$formatNum(table.orders[0].total_order)}` : '' }}</div>
                                     </div>
                                 </div>
                                 <div class="widget-progress-wrapper">
@@ -94,13 +94,13 @@
                                             <input type="number" class="form-control" v-model="orderDetail.quantity" v-if="orderDetail.edit">
                                             <span v-else>{{ orderDetail.quantity }}</span>
                                         </td>
-                                        <td>${{ $formatNum(orderDetail.quantity * orderDetail.price) }}</td>
+                                        <td>${{ $formatNum(orderDetail.subtotal) }}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td></td>
                                         <td><strong>Total:</strong></td>
-                                        <td>${{ $formatNum(getTotal(orderSelected.orderDetails)) }}</td>
+                                        <td>${{ $formatNum(orderSelected.total_order) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -227,6 +227,7 @@
                     orderDetails: [],
                     valueWithPay: '',
                     payment_method_id: '',
+                    total_order: '',
                     printBill: true
                 },
                 transfer: {
@@ -263,7 +264,7 @@
                         this.getTablesWithRooms = false
                          this.interval = setInterval(() => {
                             this.getTablesRoomsAndPaymentMethods()
-                        }, 5000)
+                        }, 10000)
                     } else {
                         this.tables = response.data
                     }
@@ -313,6 +314,7 @@
                 this.orderSelected.id = order.id
                 this.orderSelected.client = order.client
                 this.orderSelected.orderDetails = order.order_details
+                this.orderSelected.total_order = order.total_order
                 this.$modal.show('show-details-and-pay-modal');
             },
             showModalTotransferOrder(order) {
@@ -379,7 +381,7 @@
                 })
             },
             getChange() {
-                return this.orderSelected.valueWithPay - this.getTotal(this.orderSelected.orderDetails)
+                return this.orderSelected.valueWithPay - this.orderSelected.total_order
             }
         },
     }

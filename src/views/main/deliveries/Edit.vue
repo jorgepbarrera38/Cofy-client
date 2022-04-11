@@ -139,6 +139,8 @@
             getDelivery() {
                 this.$http.get(`deliveries/${ this.$route.params.deliveryId }`).then( response => {
                     this.order = response.data
+                    this.order.allow_change_value_delivery = true
+
                 })
             },
             getProductsCategoriesClientsAndParameters() {

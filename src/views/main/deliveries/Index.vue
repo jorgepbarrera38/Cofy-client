@@ -43,7 +43,7 @@
                                         <td>
                                             <div :class="{ 
                                                     badge: true,
-                                                    'badge-success': delivery.status == 'Facturado',
+                                                    'badge-success': delivery.status == 'Confirmado',
                                                     'badge-warning': delivery.status == 'Registrado',
                                                     'badge-secondary': delivery.status == 'Anulado'
                                             }">
@@ -97,7 +97,7 @@
                                                         <td>${{ $formatNum(order_detail.price) }}</td>
                                                         <td>{{ order_detail.quantity }}</td>
                                                         <td>
-                                                            ${{ $formatNum(order_detail.price * order_detail.quantity) }}
+                                                            ${{ $formatNum(order_detail.subtotal) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -113,7 +113,7 @@
                                                         <td></td>
                                                         <td><strong>Total:</strong></td>
                                                         <td>
-                                                            ${{ $formatNum(getTotal(deliverySelectedToShowInfo.order_details, deliverySelectedToShowInfo)) }}
+                                                            ${{ $formatNum(deliverySelectedToShowInfo.total_order) }}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -301,7 +301,7 @@
             showModalToPay(delivery) {
                 if (!this.$hasPermission('deliveries.pay')) return this.$toastr.error('No tiene permisos para esta acción')
                 this.errorsWhenPay = {}
-                this.payData.total = this.getTotal(delivery.order_details, delivery)
+                this.payData.total = delivery.total_order
                 this.payData.delivery_id = delivery.id
                 this.payData.valueWithPay = ''
                 this.$modal.show('pay-modal')

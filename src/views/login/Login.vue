@@ -42,7 +42,7 @@
         data() {
             return {
                 user: {
-                    username: 'invitado',
+                    username: 'admin',
                     password: 123
                 },
                 logining: false

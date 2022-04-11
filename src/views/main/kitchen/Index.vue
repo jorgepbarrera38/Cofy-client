@@ -1,5 +1,12 @@
 <template>            
     <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" v-if="errors">
+                <li v-for="(error, index) in errors" :key="`error-${ index }`">
+                    {{ error[0] }}
+                </li>
+            </div>
+        </div>  
         <div class="col-md-12" v-if="loadingData">
             <div class="d-flex justify-content-center">
                 
@@ -12,15 +19,37 @@
             <div class="main-card mb-3 card">
                 <div class="card-header">
                     FECHA: {{ $moment(orderAndDelivery.created_at).format('LLL') }}
+                    <div class="btn-actions-pane-right">
+                        <button class="btn btn-warning mt-1" v-if="orderAndDelivery.status_kitchen == 'Pendiente'" :disabled="orderAndDelivery.updating_status_kitchen"
+                            @click="orderAndDeliveryIsPrepared(orderAndDelivery)">
+                            <div class="spinner-border spinner-border-sm" role="status" v-if="orderAndDelivery.updating_status_kitchen">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <i class="fa fa-check" v-else></i> Se preparó
+                        </button>
+                        <button class="btn btn-success mt-1" v-if="orderAndDelivery.status_kitchen == 'Preparado'" :disabled="orderAndDelivery.updating_status_kitchen"
+                            @click="orderAndDeliveryIsDelivered(orderAndDelivery)">
+                            <div class="spinner-border spinner-border-sm" role="status" v-if="orderAndDelivery.updating_status_kitchen">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <i class="fa fa-check" v-else></i> Se entregó
+                        </button>
+                    </div>
                 </div>
                 <div class="pl-3 pr-3 pt-2">
                     <strong>Consecutivo: </strong>{{ orderAndDelivery.id }} <br>
-                    <strong>Tipo: </strong>{{ orderAndDelivery.type == 1 ? 'Orden de pedido' : 'Domicilio' }}
+                    <strong>Tipo: </strong>{{ orderAndDelivery.type }}
                     <span v-if="orderAndDelivery.type == 1">
                         <strong> - Mesa: </strong>{{ orderAndDelivery.table.number }}
                     </span>
                     <br>
-                    <strong>Usuario que generó: </strong>{{ orderAndDelivery.user_create.identification + ' - ' + orderAndDelivery.user_create.names }}
+                    <strong>Usuario que generó: </strong>{{ orderAndDelivery.user_create.identification + ' - ' + orderAndDelivery.user_create.names }} <br>
+                    <span :class="{badge: true, 
+                                'badge-danger': orderAndDelivery.status_kitchen == 'Pendiente',
+                                'badge-warning': orderAndDelivery.status_kitchen == 'Preparado',
+                                'badge-success': orderAndDelivery.status_kitchen == 'Entregado'}">
+                            {{ orderAndDelivery.status_kitchen }}
+                    </span>
                 </div>
                 <hr>
                 <div class="table-responsive" style="min-height:300px;max-height:300px;overflow:auto">
@@ -73,7 +102,7 @@
             this.getOrdersAndDeliveries()
             this.interval = setInterval(() => {
                 this.getOrdersAndDeliveries()
-            }, 5000)
+            }, 15000)
         },
         destroyed () {
             clearInterval(this.interval)
@@ -83,58 +112,49 @@
                 ordersAndDeliveries: [],
                 loadingData: true,
                 interval: '',
+                errors: null,
             }
         },
         methods: {
             getOrdersAndDeliveries() {
                 this.$http.get(`kitchen`).then( response => {
                     this.ordersAndDeliveries = response.data
-                    this.loadingData = false
-                }).catch(() => {
-                    this.loadingData = false
-                })
-            },
-            deleteClient(client, index) {
-                if (!this.$hasPermission('clients.destroy')) return this.$toastr.error('No tiene permisos para esta acción')
-                client.deleting = true
-                this.$http.delete(`clients/${ client.id }`).then( () => {
-                    this.getClients()
-                    this.clients.data.splice(index, 1)
-                    client.deleting = false
-                    this.$toastr.success('Cliente eliminado')
-                }).catch(error => {
-                    client.deleting = false
-                    if (error.response.status == 422) {
-                        return this.$toastr.error(error.response.data.errors.message[0]);
-                    }
-                    this.$toastr.error('El cliente no se pudo eliminar')
-                })
-            },
-            selectAsFirst(client) {
-                if (!this.$hasPermission('clients.selectAsFirst')) return this.$toastr.error('No tiene permisos para esta acción')
-                client.updatingToFirst = true
-                this.$http.put(`clients/${ client.id }/select-as-first`).then( () => {
-                    this.getClients()
-                    this.clients.data.forEach(client => {
-                        client.first = false
+                    this.ordersAndDeliveries.forEach(orderAndDelivery => {
+                        this.$set(orderAndDelivery, 'updating_status_kitchen', false)
                     })
-                    client.first = 1
-                    client.updatingToFirst = false
-                    this.$toastr.success('Cliente seleccionado como principal')
+                    this.loadingData = false
                 }).catch(() => {
-                    client.updatingToFirst = false
+                    this.loadingData = false
                 })
-            },
-            goToRouteCreateClient() {
-                if (!this.$hasPermission('clients.store')) return this.$toastr.error('No tiene permisos para esta acción')
-                this.$router.push({ name: 'clients.create' })
-            },
-            goToRouteEditClient(client) {
-                if (!this.$hasPermission('clients.update')) return this.$toastr.error('No tiene permisos para esta acción')
-                this.$router.push({ name: 'clients.edit', params: { id: client.id } })
             },
             getOnlyProductsThatShowInKitchen(orderDetails) {
                 return orderDetails.filter(orderDetail => orderDetail.product.show_in_kitchen)
+            },
+            orderAndDeliveryIsPrepared (orderAndDelivery) {
+                orderAndDelivery.updating_status_kitchen = true
+                this.$http.put(`kitchen/${ orderAndDelivery.id }/order-and-delivery-is-prepared`).then( response => {
+                    orderAndDelivery.status_kitchen = 'Preparado'
+                    orderAndDelivery.updating_status_kitchen = false
+                }).catch(error => {
+                    orderAndDelivery.updating_status_kitchen = false
+                    this.saving = false
+                    if (error.response.status == 422) {
+                        this.errors = error.response.data.errors
+                    }
+                })
+            },
+            orderAndDeliveryIsDelivered (orderAndDelivery) {
+                orderAndDelivery.updating_status_kitchen = true
+                this.$http.put(`kitchen/${ orderAndDelivery.id }/order-and-delivery-is-delivered`).then( response => {
+                    orderAndDelivery.status_kitchen = 'Entregado'
+                    orderAndDelivery.updating_status_kitchen = false
+                }).catch(error => {
+                    orderAndDelivery.updating_status_kitchen = false
+                    this.saving = false
+                    if (error.response.status == 422) {
+                        this.errors = error.response.data.errors
+                    }
+                })
             }
         },
         computed: {

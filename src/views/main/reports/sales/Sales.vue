@@ -35,11 +35,11 @@
                             <div class="table-responsive">
                                 <table class="table table-hover table-sm">
                                     <thead>
-                                        <th>Factura</th>
-                                        <th>Fecha factura</th>
+                                        <th>Consecutivo</th>
+                                        <th>Fecha</th>
                                         <th nowrap>Generado por</th>
-                                        <th>Usuario que generó orden/domicilio/venta</th>
-                                        <th>Usuario que facturó</th>
+                                        <th>Usuario que registró</th>
+                                        <th>Usuario que confirmó</th>
                                         <th>Estado</th>
                                         <th>Total</th>
                                         <th></th>
@@ -49,24 +49,18 @@
                                             <td>{{ sale.number_bill }}</td>
                                             <td nowrap>{{ $moment(sale.date_bill).format('LLL') }}</td>
                                             <td>
-                                                <span v-if="sale.order.type == 1">
-                                                    {{ `Orden de pedido N.o: ${ sale.order.id }` }}
-                                                </span>
-                                                <span v-if="sale.order.type == 2">
-                                                    {{ `Domicilio N.o: ${ sale.order.id }` }}
-                                                </span>
-                                                <span v-if="sale.order.type == 3">
-                                                    Venta directa
+                                                <span>
+                                                    {{ `${ sale.order.type }: ${ sale.order.id }` }}
                                                 </span>
                                             </td>
                                             <!--<td>{{ sale.order.table_id ? `` :  }}</td>-->
                                             <td>{{ sale.order.user_create.names }}</td>
                                             <td>{{ sale.user_create ? sale.user_create.names : '' }}</td>
-                                            <td>{{ sale.canceled ? 'Anulado' : 'Facturado' }}</td>
+                                            <td>{{ sale.status }}</td>
                                             <td>${{ $formatNum(sale.total_bill) }}</td>
                                             <td nowrap>
                                                 <button class="btn btn-danger mr-1" title="Anular factura" @click="showFormToCancelBill(sale)" :disabled="sale.canceling"
-                                                    v-if="!sale.canceled">
+                                                    v-if="sale.status == 'Confirmado'">
                                                     <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.canceling">
                                                         <span class="sr-only">Loading...</span>
                                                     </div>

@@ -17,13 +17,8 @@
                             <div class="app-footer-left">
                                 <ul class="nav">
                                     <li class="nav-item">
-                                        <a href="https://www.facebook.com/digitalprog" target="_blank" class="nav-link">
-                                            Digital Pro - Cofy
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" @click.prevent.stop="">
-                                            Versión: 1.0
+                                        <a href="https://web.facebook.com/digitalappsoftware" target="_blank" class="nav-link">
+                                            Desarrollado por DigitalApp
                                         </a>
                                     </li>
                                 </ul>

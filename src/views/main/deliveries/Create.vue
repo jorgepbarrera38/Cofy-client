@@ -149,7 +149,7 @@
                             this.order.value_delivery = response.data.parameters.value_delivery
                             this.order.allow_change_value_delivery = response.data.parameters.allow_change_value_delivery
                             this.value_delivery_original = response.data.parameters.value_delivery
-                            this.allow_change_value_deliver_original = response.data.parameters.allow_change_value_delivery
+                            //this.allow_change_value_deliver_original = response.data.parameters.allow_change_value_delivery
                         }
 
                         this.clients = response.data.clients
