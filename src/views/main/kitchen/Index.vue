@@ -102,7 +102,7 @@
             this.getOrdersAndDeliveries()
             this.interval = setInterval(() => {
                 this.getOrdersAndDeliveries()
-            }, 15000)
+            }, 10000)
         },
         destroyed () {
             clearInterval(this.interval)

@@ -52,7 +52,7 @@
                                             <td>{{ sale.status }}</td>
                                             <td>{{ sale.client.identification + ' - ' + sale.client.full_names }}</td>
                                             <td>{{ sale.user_create.names }}</td>
-                                            <td>{{ sale.user_cancel.names }}</td>
+                                            <td>{{ sale.user_cancel ? sale.user_cancel.names : '' }}</td>
                                             <td>
                                                 <span>
                                                     {{ `${ sale.order.type }: ${ sale.order.id }` }}

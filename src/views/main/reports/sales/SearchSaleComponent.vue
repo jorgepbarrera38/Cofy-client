@@ -15,7 +15,7 @@
             <label class="mr-sm-2">Fecha final</label>
             <input type="datetime-local" class="form-control" v-model="dateFinal">
         </div>
-        <div class="form-group col-md-12">
+        <!--<div class="form-group col-md-12">
             <label class="mr-sm-2">Usuario que generó orden/domicilio/venta</label>
             <v-select :options="users" 
                             :reduce="user => user.id" 
@@ -27,7 +27,7 @@
                             </template>
                         </template>
             </v-select>
-        </div>
+        </div>-->
         <div class="form-group col-md-12">
             <label class="mr-sm-2">Tipo</label>
             <div class="custom-radio custom-control">
