@@ -37,10 +37,11 @@
                                     <thead>
                                         <th>Consecutivo</th>
                                         <th>Fecha</th>
-                                        <th nowrap>Generado por</th>
-                                        <th>Usuario que registró</th>
-                                        <th>Usuario que confirmó</th>
                                         <th>Estado</th>
+                                        <th>Cliente</th>
+                                        <th>Usuario que generó</th>
+                                        <th>Usuario que anuló</th>
+                                        <th nowrap>Generado por</th>
                                         <th>Total</th>
                                         <th></th>
                                     </thead>
@@ -48,25 +49,25 @@
                                         <tr v-for="sale in sales.data" :key="sale.index">
                                             <td>{{ sale.number_bill }}</td>
                                             <td nowrap>{{ $moment(sale.date_bill).format('LLL') }}</td>
+                                            <td>{{ sale.status }}</td>
+                                            <td>{{ sale.client.identification + ' - ' + sale.client.full_names }}</td>
+                                            <td>{{ sale.user_create.names }}</td>
+                                            <td>{{ sale.user_cancel.names }}</td>
                                             <td>
                                                 <span>
                                                     {{ `${ sale.order.type }: ${ sale.order.id }` }}
                                                 </span>
                                             </td>
-                                            <!--<td>{{ sale.order.table_id ? `` :  }}</td>-->
-                                            <td>{{ sale.order.user_create.names }}</td>
-                                            <td>{{ sale.user_create ? sale.user_create.names : '' }}</td>
-                                            <td>{{ sale.status }}</td>
                                             <td>${{ $formatNum(sale.total_bill) }}</td>
                                             <td nowrap>
-                                                <button class="btn btn-danger mr-1" title="Anular factura" @click="showFormToCancelBill(sale)" :disabled="sale.canceling"
+                                                <button class="btn btn-danger mr-1" title="Anular venta" @click="showFormToCancelBill(sale)" :disabled="sale.canceling"
                                                     v-if="sale.status == 'Confirmado'">
                                                     <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.canceling">
                                                         <span class="sr-only">Loading...</span>
                                                     </div>
                                                     <i class="fa fa-times-circle" v-else></i>
                                                 </button>
-                                                <button class="btn btn-info" title="Imprimir factura" @click="printBill(sale)" :disabled="sale.printingBill">
+                                                <button class="btn btn-info" title="Imprimir venta" @click="printBill(sale)" :disabled="sale.printingBill">
                                                     <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.printingBill">
                                                         <span class="sr-only">Loading...</span>
                                                     </div>
@@ -80,7 +81,7 @@
                             <pagination :data="sales" @pagination-change-page="getSales"></pagination>
                             <modal name="cancel-bill-modal" :adaptive="true" height="auto">
                                 <div class="p-4">
-                                    <h5 class="mb-3">Anular factura</h5>
+                                    <h5 class="mb-3">Anular venta</h5>
                                     <div class="alert alert-danger" v-if="Object.keys(errorsWhenCancelBills).length">
                                         <li v-for="(error, index) in errorsWhenCancelBills" :key="index">
                                             {{ error[0] }}
@@ -88,7 +89,7 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
-                                            <label for="">Factura: </label>
+                                            <label for="">Consecutivo: </label>
                                             {{ billSelectedToDelete.id }}
                                         </div>
                                         <div class="form-group col-md-12" v-if="billSelectedToDelete.order.table_id">
@@ -121,9 +122,9 @@
                             <div class="table-responsive">
                                 <table class="table table-hover table-sm">
                                     <thead>
-                                        <th>Factura</th>
-                                        <th>Fecha factura</th>
-                                        <th>Estado factura</th>
+                                        <th>Consecutivo</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
                                         <th>Producto</th>
                                         <th>Precio</th>
                                         <th>Cantidad</th>
@@ -135,7 +136,7 @@
                                         <tr v-for="saleDetail in salesDetails.data" :key="`saleDetail-${saleDetail.id}`">
                                             <td>{{ saleDetail.bill.id }}</td>
                                             <td>{{ $moment(saleDetail.bill.date_bill).format('LLL') }}</td>
-                                            <td>{{ saleDetail.bill.canceled ? 'Anulado' : 'Facturado' }}</td>
+                                            <td>{{ saleDetail.bill.status }}</td>
                                             <td>{{ saleDetail.product.name }}</td>
                                             <td>${{ $formatNum(saleDetail.price) }}</td>
                                             <td>{{ saleDetail.quantity }}</td>
@@ -270,7 +271,7 @@
                     bill.printingBill = false
                 }).catch(error => {
                     thibills.printingBill = false
-                    this.$toastr.error('La factura no se pudo generar')
+                    this.$toastr.error('El comprobante de venta no se pudo generar')
                 })
             }
         },

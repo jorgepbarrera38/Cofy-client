@@ -106,7 +106,7 @@
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label class="form-check-label">
-                                        <input type="checkbox" v-model="order.printBill"> Imprimir factura de venta
+                                        <input type="checkbox" v-model="order.printBill"> Imprimir comprobante de venta
                                     </label>
                                 </div>
                             </div>

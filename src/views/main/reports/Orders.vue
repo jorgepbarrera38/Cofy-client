@@ -51,7 +51,7 @@
                                             <td>{{ order.user_create.names }}</td>
                                             <td>{{ order.user_cancel ? order.user_cancel.names : '' }}</td>
                                             <td>
-                                                ${{ $formatNum(getTotal(order.order_details, order.status)) }}
+                                                ${{ $formatNum(order.total_order) }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -81,7 +81,7 @@
                                             <td>{{ orderDetail.product.name }}</td>
                                             <td>{{ $formatNum(orderDetail.price) }}</td>
                                             <td>{{ orderDetail.quantity }}</td>
-                                            <td>${{ $formatNum(orderDetail.price * orderDetail.quantity) }}</td>
+                                            <td>${{ $formatNum(orderDetail.subtotal) }}</td>
                                             <td>{{ orderDetail.order.user_create.names }}</td>
                                         </tr>
                                     </tbody>
