@@ -129,7 +129,6 @@
                                         <th>Precio</th>
                                         <th>Cantidad</th>
                                         <th>Subtotal</th>
-                                        <th>Usuario que generó orden/domicilio/venta</th>
                                         <th></th>
                                     </thead>
                                     <tbody>
@@ -140,8 +139,7 @@
                                             <td>{{ saleDetail.product.name }}</td>
                                             <td>${{ $formatNum(saleDetail.price) }}</td>
                                             <td>{{ saleDetail.quantity }}</td>
-                                            <td>${{ $formatNum(saleDetail.price * saleDetail.quantity) }}</td>
-                                            <td>{{ saleDetail.bill.order.user_create.names }}</td>
+                                            <td>${{ $formatNum(saleDetail.subtotal) }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

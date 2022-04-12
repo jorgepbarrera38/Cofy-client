@@ -71,7 +71,6 @@
                                     <th>Precio</th>
                                     <th>Cantidad</th>
                                     <th>Subtotal</th>
-                                    <th>Usuario que registró</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
@@ -84,8 +83,7 @@
                                             ${{ $formatNum(deliveryDetail.price) }}
                                         </td>
                                         <td>{{ deliveryDetail.quantity }}</td>
-                                        <td>${{ $formatNum(deliveryDetail.price * deliveryDetail.quantity) }}</td>
-                                        <td>{{ deliveryDetail.order.user_create.names }}</td>
+                                        <td>${{ $formatNum(deliveryDetail.subtotal) }}</td>
                                     </tr>
                                 </tbody>
                             </table>

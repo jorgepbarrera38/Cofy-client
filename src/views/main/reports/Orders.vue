@@ -38,6 +38,7 @@
                                         <th>Fecha</th>
                                         <th>Estado</th>
                                         <th>Mesa</th>
+                                        <th>Cliente</th>
                                         <th>Usuario que registró</th>
                                         <th>Usuario que anuló</th>
                                         <th>Total</th>
@@ -48,6 +49,7 @@
                                             <td>{{ $moment(order.created_at).format('LLL') }}</td>
                                             <td>{{ order.status }}</td>
                                             <td>{{ order.table.number }}</td>
+                                            <td>{{ order.client.identification + ' - ' + order.client.full_names }}</td>
                                             <td>{{ order.user_create.names }}</td>
                                             <td>{{ order.user_cancel ? order.user_cancel.names : '' }}</td>
                                             <td>
@@ -70,7 +72,6 @@
                                         <th>Precio</th>
                                         <th>Cantidad</th>
                                         <th>Subtotal</th>
-                                        <th>Usuario que registró</th>
                                         <th></th>
                                     </thead>
                                     <tbody>
@@ -82,7 +83,6 @@
                                             <td>{{ $formatNum(orderDetail.price) }}</td>
                                             <td>{{ orderDetail.quantity }}</td>
                                             <td>${{ $formatNum(orderDetail.subtotal) }}</td>
-                                            <td>{{ orderDetail.order.user_create.names }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
