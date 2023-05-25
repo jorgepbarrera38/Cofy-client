@@ -55,23 +55,23 @@
                                             <td>{{ sale.user_cancel ? sale.user_cancel.names : '' }}</td>
                                             <td>
                                                 <span>
-                                                    {{ `${ sale.order.type }: ${ sale.order.id }` }}
+                                                    {{ `${ sale.order.type }: ${ sale.order.consecutive }` }}
                                                 </span>
                                             </td>
                                             <td>${{ $formatNum(sale.total_bill) }}</td>
                                             <td nowrap>
-                                                <button class="btn btn-danger mr-1" title="Anular venta" @click="showFormToCancelBill(sale)" :disabled="sale.canceling"
+                                                <button class="btn btn-info mr-1" title="Imprimir venta" @click="printBill(sale)" :disabled="sale.printingBill">
+                                                    <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.printingBill">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                    <i class="fa fa-print" v-else></i>
+                                                </button>
+                                                <button class="btn btn-danger" title="Anular venta" @click="showFormToCancelBill(sale)" :disabled="sale.canceling"
                                                     v-if="sale.status == 'Confirmado'">
                                                     <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.canceling">
                                                         <span class="sr-only">Loading...</span>
                                                     </div>
                                                     <i class="fa fa-times-circle" v-else></i>
-                                                </button>
-                                                <button class="btn btn-info" title="Imprimir venta" @click="printBill(sale)" :disabled="sale.printingBill">
-                                                    <div class="spinner-border text-light spinner-border-sm" role="status" v-if="sale.printingBill">
-                                                        <span class="sr-only">Loading...</span>
-                                                    </div>
-                                                    <i class="fa fa-print" v-else></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -90,17 +90,17 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="">Consecutivo: </label>
-                                            {{ billSelectedToDelete.id }}
+                                            {{ billSelectedToDelete.number_bill }}
                                         </div>
                                         <div class="form-group col-md-12" v-if="billSelectedToDelete.order.table_id">
                                             <label for="">Mesa: </label>
                                             {{ billSelectedToDelete.order.table_id }}
                                         </div>
-                                        <div class="form-group col-md-12" v-if="billSelectedToDelete.order.type != 3">
+                                        <div class="form-group col-md-12" v-if="billSelectedToDelete.order.type != 'Venta directa'">
                                             <div class="custom-checkbox custom-control">
                                                 <input type="checkbox" id="exampleCustomCheckbox" class="custom-control-input" v-model="cancelOrderOrDelivery">
                                                 <label class="custom-control-label" for="exampleCustomCheckbox">
-                                                    Anular {{ billSelectedToDelete.order.table_id ? 'orden de pedido' : 'domicilio' }}
+                                                   Anular {{ billSelectedToDelete.order.type }}
                                                 </label>
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="saleDetail in salesDetails.data" :key="`saleDetail-${saleDetail.id}`">
-                                            <td>{{ saleDetail.bill.id }}</td>
+                                            <td>{{ saleDetail.bill.number_bill }}</td>
                                             <td>{{ $moment(saleDetail.bill.date_bill).format('LLL') }}</td>
                                             <td>{{ saleDetail.bill.status }}</td>
                                             <td>{{ saleDetail.product.name }}</td>

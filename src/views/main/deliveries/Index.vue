@@ -36,7 +36,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="delivery in deliveries.data" :key="`deliv-${delivery.id}`">
-                                        <td>{{ delivery.id }}</td>
+                                        <td>{{ delivery.consecutive }}</td>
                                         <td nowrap>{{ $moment(delivery.created_at).format('LLL') }}</td>
                                         <td>{{ delivery.address }}</td>
                                         <td>{{ delivery.observations }}</td>
@@ -53,13 +53,9 @@
                                         <td>${{ $formatNum(delivery.value_delivery) }}</td>
                                         <td>${{ $formatNum(getTotal(delivery.order_details, delivery)) }}</td>
                                         <td nowrap>
-                                            <button class="btn btn-info mr-1" title="Información domicilio"
+                                            <button class="btn btn-secondary mr-1" title="Editar domicilio" v-if="delivery.status != 'Registrado'"
                                                 @click="showModalToSeeInfoFromDelivery(delivery)">
                                                 <i class="fa fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning mr-1" title="Editar domicilio" v-if="delivery.status == 'Registrado'"
-                                                @click="goToRouteEditDelivery(delivery)">
-                                                <i class="fa fa-edit"></i>
                                             </button>
                                             <button class="btn btn-danger mr-1" title="Anular domicilio" v-if="delivery.status == 'Registrado'" :disabled="delivery.deleting"
                                                 @click="showModalToCancelDelivery(delivery)">
@@ -68,7 +64,11 @@
                                                 </div>
                                                 <i class="fa fa-times-circle" v-else></i>
                                             </button>
-                                            <button class="btn btn-primary" title="Pagar domicilio" v-if="delivery.status == 'Registrado'"
+                                            <button class="btn btn-warning mr-1" title="Editar domicilio" v-if="delivery.status == 'Registrado'"
+                                                @click="goToRouteEditDelivery(delivery)">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-info" title="Pagar domicilio" v-if="delivery.status == 'Registrado'"
                                                 @click="showModalToPay(delivery)">
                                                 <i class="fa fa-cash-register"></i>
                                             </button>
@@ -128,21 +128,25 @@
                             </div>
                         </modal>
                         
-                        <modal name="cancel-delivery-modal" :adaptative="true" height="auto">
+                        <modal name="cancel-delivery-modal" :adaptive="true" height="auto">
                             <div class="p-4">
                                 <h5 class="mb-3">Anular domicilio</h5>
-                                <p>¿Seguro que desea anular el domicilio?</p>
-                                <hr>
-                                <button class="btn btn-secondary mr-1" @click="$modal.hide('cancel-delivery-modal')" :disabled="cancelingDelivery">
-                                    <i class="fa fa-times"></i> Cerrar
-                                </button>
-                                <button class="btn btn-danger" :disabled="cancelingDelivery"
-                                    @click="cancelDelivery">
-                                    <div class="spinner-border text-light spinner-border-sm" role="status" v-if="cancelingDelivery">
-                                        <span class="sr-only">Loading...</span>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>¿Seguro que desea anular el domicilio?</p>
+                                        <hr>
+                                        <button class="btn btn-secondary mr-1" @click="$modal.hide('cancel-delivery-modal')" :disabled="cancelingDelivery">
+                                            <i class="fa fa-times"></i> Cerrar
+                                        </button>
+                                        <button class="btn btn-danger" :disabled="cancelingDelivery"
+                                            @click="cancelDelivery">
+                                            <div class="spinner-border text-light spinner-border-sm" role="status" v-if="cancelingDelivery">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <i class="fa fa-times-circle" v-else></i> Anular
+                                        </button>
                                     </div>
-                                    <i class="fa fa-times-circle" v-else></i> Anular
-                                </button>
+                                </div>
                             </div>
                         </modal>
                         
@@ -153,6 +157,46 @@
                                     <li v-for="(error, index) in errorsWhenPay" :key="`err-${ index }`">
                                         {{ error[0] }}
                                     </li>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive" style="max-height:280px;overflow:auto">
+                                            <table class="table table-hover table-sm">
+                                                <thead>
+                                                    <th>Producto</th>
+                                                    <th>Precio</th>
+                                                    <th>Cantidad</th>
+                                                    <th class="text-right">Subtotal</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="order_detail in deliverySelectedToShowInfo.order_details" :key="`order-det-${ order_detail.id }`">
+                                                        <td>{{ order_detail.product.name }}</td>
+                                                        <td>${{ $formatNum(order_detail.price) }}</td>
+                                                        <td>{{ order_detail.quantity }}</td>
+                                                        <td class="text-right">
+                                                            ${{ $formatNum(order_detail.subtotal) }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right" nowrap><strong>Valor domicilio:</strong></td>
+                                                        <td class="text-right">
+                                                            ${{ $formatNum(deliverySelectedToShowInfo.value_delivery) }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Total:</strong></td>
+                                                        <td class="text-right">
+                                                            ${{ $formatNum(deliverySelectedToShowInfo.total_order) }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
@@ -165,20 +209,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-12">
-                                        <label for="">Total</label>
-                                        <h2>
-                                            ${{ $formatNum(payData.total) }}
-                                        </h2>
-                                    </div>
-                                    <div class="form-group col-md-12">
                                         <label for="">Valor con que pagan</label>
                                         <input type="number" class="form-control" v-model="payData.valueWithPay">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="">Valor a devolver</label>
-                                        <h2 :class="{ 'text-danger': getChange < 0, 'text-success': getChange >= 0 }">
-                                            ${{ $formatNum(getChange) }}
-                                        </h2>
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label class="form-check-label">
@@ -301,9 +333,9 @@
             showModalToPay(delivery) {
                 if (!this.$hasPermission('deliveries.pay')) return this.$toastr.error('No tiene permisos para esta acción')
                 this.errorsWhenPay = {}
-                this.payData.total = delivery.total_order
                 this.payData.delivery_id = delivery.id
                 this.payData.valueWithPay = ''
+                this.deliverySelectedToShowInfo = delivery
                 this.$modal.show('pay-modal')
             },
             pay() {
@@ -335,11 +367,6 @@
                 if (!this.$hasPermission('deliveries.update')) return this.$toastr.error('No tiene permisos para esta acción')
                 this.$router.push({ name: 'deliveries.edit', params: { deliveryId: delivery.id } })
             },
-        },
-        computed: {
-            getChange() {
-                return this.payData.valueWithPay - this.payData.total
-            }
         },
     }
 </script>

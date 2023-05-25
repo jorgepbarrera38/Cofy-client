@@ -30,7 +30,7 @@
                                 <div class="widget-content-left mr-3">
                                     <img width="50"  
                                         @click.stop="addProductToOrder(product)" 
-                                        class="rounded-circle" :src="product.image ? $hostServer + product.image : require('@/assets/placeholder-image.jpg')" 
+                                        class="rounded-circle" :src="product.image ? APP_URL + product.image : require('@/assets/placeholder-image.jpg')" 
                                         alt="">
                                 </div>
                                 <div class="widget-content-left">
@@ -59,7 +59,7 @@
 
                                     <center>
                                         <img width="140" @click.stop="$emit('addProductToOrder', product)" 
-                                        class="rounded-circle" :src="productToShowInfo.image ? $hostServer + productToShowInfo.image : require('@/assets/placeholder-image.jpg')" alt="">
+                                        class="rounded-circle" :src="productToShowInfo.image ? APP_URL + productToShowInfo.image : require('@/assets/placeholder-image.jpg')" alt="">
                                     </center>
                                     
                                     <div class="mb-2">
@@ -80,6 +80,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
         props: {
             products: {
@@ -130,6 +131,7 @@
             }
         },
         computed: {
+            ...mapState(['APP_URL']),
             productsFilteredsByNameOrCategory() {
                 if (this.searchProduct.categoryId == 'todos') {
                     return this.products.filter(product => {

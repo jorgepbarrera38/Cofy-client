@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="pl-3 pr-3 pt-2">
-                    <strong>Consecutivo: </strong>{{ orderAndDelivery.id }} <br>
+                    <strong>Consecutivo: </strong>{{ orderAndDelivery.consecutive }} <br>
                     <strong>Tipo: </strong>{{ orderAndDelivery.type }}
                     <span v-if="orderAndDelivery.type == 1">
                         <strong> - Mesa: </strong>{{ orderAndDelivery.table.number }}
@@ -71,7 +71,7 @@
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
                                                     <img width="40" class="rounded-circle" 
-                                                        :src="orderDetail.product.image ? $hostServer + orderDetail.product.image : require('@/assets/placeholder-image.jpg')" 
+                                                        :src="orderDetail.product.image ? APP_URL + orderDetail.product.image : require('@/assets/placeholder-image.jpg')" 
                                                         alt="">
                                                 </div>
                                             </div>
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
         name: 'kitchen.index',
         created () {
@@ -158,6 +159,7 @@
             }
         },
         computed: {
+            ...mapState(['APP_URL']),
         },
     }
 </script>

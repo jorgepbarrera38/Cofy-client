@@ -15,7 +15,7 @@
                 <div class="card-header">
                     RESULTADOS
                     <div class="btn-actions-pane-right">
-                        <button class="btn btn-success" @click="downloadOrdersInExcel" :disabled="!orders.data.length || downloadingOrdersInExcel">
+                        <button class="btn btn-success" @click="downloadOrdersInExcel" :disabled="(!ordersDetails.data.length && !orders.data.length) || downloadingOrdersInExcel">
                             <div class="spinner-border text-light spinner-border-sm" role="status" v-if="downloadingOrdersInExcel">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -45,7 +45,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="order in orders.data" :key="order.index">
-                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.consecutive }}</td>
                                             <td>{{ $moment(order.created_at).format('LLL') }}</td>
                                             <td>{{ order.status }}</td>
                                             <td>{{ order.table.number }}</td>
@@ -76,7 +76,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="orderDetail in ordersDetails.data" :key="`orderDetail-${orderDetail.id}`">
-                                            <td>{{ orderDetail.order.id }}</td>
+                                            <td>{{ orderDetail.order.consecutive }}</td>
                                             <td>{{ $moment(orderDetail.order.created_at).format('LLL') }}</td>
                                             <td>{{ orderDetail.order.status }}</td>
                                             <td>{{ orderDetail.product.name }}</td>

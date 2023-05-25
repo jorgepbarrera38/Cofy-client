@@ -102,7 +102,7 @@
                             <li>
                                 <a href="#" @click.prevent="goToRouteOrderIndex">
                                     <i class="metismenu-icon fa fa-clipboard-list"></i>
-                                    Órdenes de pedido
+                                    Ordenes de pedido
                                 </a>
                             </li>
                             <li>
@@ -171,20 +171,20 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li>
+                            <!--<li>
                                 <a href="#" @click.prevent="$modal.show('about-modal')">
                                     <i class="metismenu-icon fa fa-info"></i>
                                     Acerca de
                                 </a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </div>
-                <modal name="about-modal" :adaptative="true" height="auto">
+                <modal name="about-modal" :adaptive="true" height="auto">
                     <div class="p-4">
                         <h5 class="mb-3"><i class="fa fa-coffee"></i> Acerca de Cofy</h5>
                         <p class="text-justify">
-                            Software para cafeterías, restaurantes, bares, negocios de comidas y similares. Registre salas y mesas, productos, órdenes de pedido, domicilios, ventas directas; 
+                            Software para cafeterías, restaurantes, bares, negocios de comidas y similares. Registre salas y mesas, productos, ordenes de pedido, domicilios, ventas directas; 
                             genere reportes de ventas, cree usuarios con permisos y mida la productividad de sus empleados, entre muchas cosas más.
                         </p>
                         <p>

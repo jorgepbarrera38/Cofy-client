@@ -1,13 +1,13 @@
 <template>            
     <div class="row" style="height:100%">
-        <div class="col-lg-5 col-md-6 col-sm-12" style="height:100%">
+        <div class="col-lg-5 col-md-5 col-sm-12" style="height:100%">
             <list-product :products="products" 
                         :categoriesFromProduct="categoriesFromProduct"
                         @addProductToOrder="addProductToOrder"
                         :loadingData="loadingData"
                         />
         </div>
-        <div class="col-lg-7 col-md-6 col-sm-12" style="height:100%">
+        <div class="col-lg-7 col-md-7 col-sm-12" style="height:100%">
             <div class="card" style="height:100%">
                 <div class="card-header">
                     Venta directa
@@ -47,8 +47,8 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(orderDetail, index) in order.orderDetails" :key="`orderDetail-${ index }`">
-                                    <td nowrap>
-                                        <img width="40" class="rounded-circle mr-1" :src="orderDetail.product_image ? $hostServer + orderDetail.product_image : require('@/assets/placeholder-image.jpg')" alt="">
+                                    <td>
+                                        <img width="40" class="rounded-circle mr-1" :src="orderDetail.product_image ? APP_URL + orderDetail.product_image : require('@/assets/placeholder-image.jpg')" alt="">
                                         {{ orderDetail.product_name }}
                                     </td>
                                     <td>${{ $formatNum(orderDetail.product_price) }}</td>
@@ -99,12 +99,6 @@
                                     <input type="number" class="form-control" v-model="order.valueWithPay">
                                 </div>
                                 <div class="form-group col-md-12">
-                                    <label for="">Valor a devolver</label>
-                                    <h2 :class="{ 'text-danger': getChange < 0, 'text-success': getChange >= 0 }">
-                                        ${{ $formatNum(getChange) }}
-                                    </h2>
-                                </div>
-                                <div class="form-group col-md-12">
                                     <label class="form-check-label">
                                         <input type="checkbox" v-model="order.printBill"> Imprimir comprobante de venta
                                     </label>
@@ -131,6 +125,7 @@
 <script>
     import ListProduct from '../orders/ListProductComponent'
     import printJS from 'print-js'
+    import { mapState } from 'vuex'
     export default {
         components: {
             'list-product': ListProduct
@@ -272,9 +267,7 @@
             },
         },
         computed: {
-            getChange() {
-                return this.order.valueWithPay - this.getTotal()
-            }
+            ...mapState(['APP_URL']),
         },
         
     }

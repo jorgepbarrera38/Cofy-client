@@ -42,8 +42,8 @@
         data() {
             return {
                 user: {
-                    username: 'admin',
-                    password: 123
+                    username: '',
+                    password: ''
                 },
                 logining: false
             }

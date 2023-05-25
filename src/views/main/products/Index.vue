@@ -35,7 +35,7 @@
                                 <tbody>
                                     <tr v-for="(product, index) in products.data" :key="`prod-${product.id}`">
                                         <td nowrap>
-                                            <img width="40" class="rounded-circle mr-1" :src="product.image ? $hostServer + product.image : require('@/assets/placeholder-image.jpg')" alt="">
+                                            <img width="40" class="rounded-circle mr-1" :src="product.image ? APP_URL + product.image : require('@/assets/placeholder-image.jpg')" alt="">
                                             {{ product.name }}
                                         </td>
                                         <td>{{ product.category_from_product.name }}</td>
@@ -86,7 +86,7 @@
 
                                     <center>
                                         <img width="140" @click.stop="$emit('addProductToOrder', product)" 
-                                        class="rounded-circle" :src="productToShowInfo.image ? $hostServer + productToShowInfo.image : require('@/assets/placeholder-image.jpg')" alt="">
+                                        class="rounded-circle" :src="productToShowInfo.image ? APP_URL + productToShowInfo.image : require('@/assets/placeholder-image.jpg')" alt="">
                                     </center>
                                     
                                     <div class="mb-2">
@@ -111,6 +111,7 @@
 
 <script>
     import SearchSimple from '../components/SearchSimple'
+    import { mapState } from 'vuex'
     export default {
         name: 'products.index',
         components: {
@@ -185,6 +186,9 @@
                 if (!this.$hasPermission('products.update')) return this.$toastr.error('No tiene permisos para esta acción')
                 this.$router.push({ name: 'products.edit', params: { id: product.id } })
             },
+        },
+        computed: {
+            ...mapState(['APP_URL']),
         },
     }
 </script>

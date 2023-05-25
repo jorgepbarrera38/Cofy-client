@@ -68,7 +68,7 @@
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
                                                     <img width="40" class="rounded-circle" 
-                                                        :src="product.product.image ? $hostServer + product.product.image : require('@/assets/placeholder-image.jpg')" 
+                                                        :src="product.product.image ? APP_URL + product.product.image : require('@/assets/placeholder-image.jpg')" 
                                                         alt="">
                                                 </div>
                                             </div>
@@ -132,6 +132,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
         created () {
             this.getMostSelledProducts()
@@ -159,6 +160,7 @@
             }
         },
         computed: {
+            ...mapState(['APP_URL']),
             getPercentageOfOccupation() {
                 let totalTables = this.tables.length
                 let tablesOccupied = this.tables.filter(table => !table.free).length

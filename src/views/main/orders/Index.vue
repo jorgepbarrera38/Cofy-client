@@ -26,7 +26,7 @@
                                 <div class="widget-content-wrapper">
                                     <div class="widget-content-left">
                                         <div class="widget-heading" style="font-size: 15px">Mesa: {{ table.number }}</div>
-                                        <div class="widget-subheading" :style="{ opacity: table.orders.length ? .7 : 0 }">Consecutivo: {{ table.orders.length ? table.orders[0].id : '' }}</div>
+                                        <div class="widget-subheading" :style="{ opacity: table.orders.length ? .7 : 0 }">Consecutivo: {{ table.orders.length ? table.orders[0].consecutive : '' }}</div>
                                     </div>
                                     <div class="widget-content-right">
                                         <div class="widget-numbers text-success">{{ table.orders.length ? `$${$formatNum(table.orders[0].total_order)}` : '' }}</div>
@@ -69,7 +69,7 @@
 
                 <modal name="show-details-and-pay-modal" :adaptive="true" height="auto">
                     <div class="p-4">
-                        <h5 class="mb-3">Pagar pedido</h5>
+                        <h5 class="mb-3">Pagar orden de pedido</h5>
                         <div class="alert alert-danger" v-if="Object.keys(errorsWhenPayOrder).length">
                             <li v-for="(error, index) in errorsWhenPayOrder" :key="`err-${ index }`">
                                 {{ error[0] }}
@@ -84,7 +84,7 @@
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
-                                    <th>Subtotal</th>
+                                    <th class="text-right">Subtotal</th>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(orderDetail, index) in orderSelected.orderDetails" :key="`det-${ index }`">
@@ -94,13 +94,13 @@
                                             <input type="number" class="form-control" v-model="orderDetail.quantity" v-if="orderDetail.edit">
                                             <span v-else>{{ orderDetail.quantity }}</span>
                                         </td>
-                                        <td>${{ $formatNum(orderDetail.subtotal) }}</td>
+                                        <td class="text-right">${{ $formatNum(orderDetail.subtotal) }}</td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td><strong>Total:</strong></td>
-                                        <td>${{ $formatNum(orderSelected.total_order) }}</td>
+                                        <td class="text-right"><strong>Total:</strong></td>
+                                        <td class="text-right">${{ $formatNum(orderSelected.total_order) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -118,12 +118,6 @@
                             <div class="form-group col-md-12">
                                 <label for="">Valor con que pagan</label>
                                 <input type="number" class="form-control" v-model="orderSelected.valueWithPay">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="">Valor a devolver</label>
-                                <h2 :class="{ 'text-danger': getChange < 0, 'text-success': getChange >= 0 }">
-                                    ${{ $formatNum(getChange) }}
-                                </h2>
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="form-check-label">
@@ -175,7 +169,7 @@
                     </div>
                 </modal>
 
-                <modal name="cancel-order-modal" :adaptative="true" height="auto">
+                <modal name="cancel-order-modal" :adaptive="true" height="auto">
                     <div class="p-4">
                         <h5 class="mb-3">Anular orden de pedido</h5>
                         <p>¿Seguro que desea anular la orden de pedido?</p>
@@ -380,9 +374,6 @@
                     return table.room_id == this.roomSelected
                 })
             },
-            getChange() {
-                return this.orderSelected.valueWithPay - this.orderSelected.total_order
-            }
         },
     }
 </script>

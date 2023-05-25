@@ -15,7 +15,7 @@
                 <div class="card-header">
                     RESULTADOS
                     <div class="btn-actions-pane-right">
-                        <button class="btn btn-success" @click="downloadDeliveriesInExcel" :disabled="!deliveries.data.length || downloadingDeliveriesInExcel">
+                        <button class="btn btn-success" @click="downloadDeliveriesInExcel" :disabled="(!deliveriesDetails.data.length && !deliveries.data.length) || downloadingDeliveriesInExcel">
                             <div class="spinner-border text-light spinner-border-sm" role="status" v-if="downloadingDeliveriesInExcel">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -45,7 +45,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="delivery in deliveries.data" :key="delivery.index">
-                                            <td>{{ delivery.id }}</td>
+                                            <td>{{ delivery.consecutive }}</td>
                                             <td>{{ $moment(delivery.created_at).format('LLL') }}</td>
                                             <td>{{ delivery.status }}</td>
                                             <td>{{ delivery.user_create.names }}</td>
@@ -75,7 +75,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="deliveryDetail in deliveriesDetails.data" :key="`deliveryDetail-${deliveryDetail.id}`">
-                                        <td>{{ deliveryDetail.order.id }}</td>
+                                        <td>{{ deliveryDetail.order.consecutive }}</td>
                                         <td>{{ $moment(deliveryDetail.order.created_at).format('LLL') }}</td>
                                         <td>{{ deliveryDetail.order.status }}</td>
                                         <td>{{ deliveryDetail.product.name }}</td>

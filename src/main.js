@@ -38,11 +38,13 @@ let production = false
 
 if (production) {
   axios.defaults.baseURL = '/api'
-  Vue.prototype.$hostServer = '/'
 } else {
   axios.defaults.baseURL = 'http://localhost:8000/api'
-  Vue.prototype.$hostServer = 'http://localhost:8000/'
 }
+
+axios.get('configs').then( response => {
+  store.commit('setAPP_URL', response.data.APP_URL)
+})
 
 Vue.prototype.$http = axios
 

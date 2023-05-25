@@ -1,13 +1,13 @@
 <template>            
     <div class="row" style="height:100%">
-        <div class="col-lg-5 col-md-6 col-sm-12" style="height:100%">
+        <div class="col-lg-5 col-md-5 col-sm-12" style="height:100%">
             <list-product :products="products" 
                         :categoriesFromProduct="categoriesFromProduct"
                         @addProductToOrder="addProductToOrder"
                         :loadingData="loadingData"
                         />
         </div>
-        <div class="col-lg-7 col-md-6 col-sm-12" style="height:100%">
+        <div class="col-lg-7 col-md-7 col-sm-12" style="height:100%">
             <div class="card" style="height:100%">
                 <div class="card-header">
                     Editar domicilio
@@ -64,21 +64,21 @@
                                 <th>Producto</th>
                                 <th>Precio</th>
                                 <th>Cantidad</th>
-                                <th>Subtotal</th>
+                                <th class="text-right">Subtotal</th>
                                 <th>Observaciónes</th>
                                 <th></th>
                             </thead>
                             <tbody>
                                 <tr v-for="(orderDetail, index) in order.order_details" :key="`orderDetail-${ index }`">
                                     <td>
-                                        <img width="40" class="rounded-circle mr-1" :src="orderDetail.product.image ? $hostServer + orderDetail.product.image : require('@/assets/placeholder-image.jpg')" alt="">
+                                        <img width="40" class="rounded-circle mr-1" :src="orderDetail.product.image ? APP_URL + orderDetail.product.image : require('@/assets/placeholder-image.jpg')" alt="">
                                         {{ orderDetail.product.name }}
                                     </td>
                                     <td>${{ $formatNum(orderDetail.product.price) }}</td>
                                     <td>
                                         <input type="number" class="form-control" v-model="orderDetail.quantity">
                                     </td>
-                                    <td>${{ $formatNum(orderDetail.quantity * orderDetail.product.price) }}</td>
+                                    <td class="text-right">${{ $formatNum(orderDetail.quantity * orderDetail.product.price) }}</td>
                                     <td>
                                         <input type="text" class="form-control" v-model="orderDetail.observations" maxlength="60">
                                     </td>
@@ -92,8 +92,8 @@
                                 <tr>
                                     <td></td>
                                     <td></td>
-                                    <td><strong>Total:</strong></td>
-                                    <td>${{ $formatNum(getTotal()) }}</td>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right">${{ $formatNum(getTotal()) }}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -107,6 +107,7 @@
 
 <script>
     import ListProduct from '../orders/ListProductComponent'
+    import { mapState } from 'vuex'
     export default {
         components: {
             'list-product': ListProduct
@@ -224,5 +225,8 @@
                 return total
             },
         },
+        computed: {
+            ...mapState(['APP_URL']),
+        }
     }
 </script>
